@@ -31,6 +31,21 @@ public class TablePanel extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+
+        //This is for the details panel
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = table.getSelectedRow();
+                for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
+                    Map<String, Object> innerMap = entry.getValue();
+                    if (innerMap.get("cageID") == table.getValueAt(selectedRow, 0).toString()) {
+                        System.out.println(table.getValueAt(selectedRow, 0).toString());
+                        break;
+                    }
+                }
+            }
+        });
+
     }
 
     public JTable getTable() {
