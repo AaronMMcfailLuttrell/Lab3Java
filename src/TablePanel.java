@@ -8,9 +8,14 @@ public class TablePanel extends JPanel {
 
     JTable table;
     JScrollPane scrollPane;
-    public TablePanel(Map<String, Map<String, Object>> tableData) {
+    public TablePanel(Map<String, Map<String, Object>> tableData, DetailsPanel detailsPanel) {
         setLayout(null);
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         model.addColumn("Cage ID");
         model.addColumn("Age (months)");
         model.addColumn("Sex");
@@ -24,7 +29,7 @@ public class TablePanel extends JPanel {
         table = new JTable(model);
         scrollPane = new JScrollPane(table);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        scrollPane.setBounds(0, 0, Constants.FRAME_WIDTH/2, Constants.FRAME_HEIGHT/3 - 20);
+        scrollPane.setBounds(0, 0, Constants.TABLE_BOUND_WIDTH, Constants.TABLE_BOUND_HEIGHT);
         add(scrollPane);
         //setSize(600, 400);
         setVisible(true);
@@ -38,9 +43,13 @@ public class TablePanel extends JPanel {
                 int selectedRow = table.getSelectedRow();
                 for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
                     Map<String, Object> innerMap = entry.getValue();
+                    //If the selected column equals the id of a specific map entry, get that map entry to then manipulate
                     if (innerMap.get("cageID") == table.getValueAt(selectedRow, 0).toString()) {
-                        System.out.println(table.getValueAt(selectedRow, 0).toString());
-                        break;
+
+                        //Put map into generation of information to Detail Pane
+                        detailsPanel.setDetailInfo(innerMap);
+                        detailsPanel.revalidate();
+                        detailsPanel.repaint();
                     }
                 }
             }

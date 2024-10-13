@@ -7,9 +7,23 @@ public class FiltersPanel extends JPanel {
     public FiltersPanel(TablePanel tableRef) {
         this.tableRef = tableRef;
         String[] filterSort = new String[] {"Filter Cage ID", "Filter Age", "Filter Sex", "Filter Heart Rate"};
-        setLayout(new GridLayout(1, 4));
+        setLayout(new GridLayout(2, 4));
         setBackground(Color.WHITE);
         setVisible(true);
+        JTextField textBox = new JTextField();
+        JPanel[] emptyPanels = new JPanel[filterSort.length - 1];
+        for (int i = 0; i < 4; i++) {
+            if (i == 0) {
+                textBox = new JTextField("Filters Panel:");
+                textBox.setEditable(false);
+                add(textBox);
+            } else {
+                emptyPanels[i - 1] = new JPanel();
+                add(emptyPanels[i - 1]);
+            }
+
+        }
+
         JCheckBox[] filterBoxes = new JCheckBox[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             filterBoxes[i] = new JCheckBox(filterSort[i]);
