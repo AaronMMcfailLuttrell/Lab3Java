@@ -22,11 +22,11 @@ public class GuiMain {
 
 
         //Temp
-        FiltersPanel filtersPanel = new FiltersPanel();
+        TablePanel tablePanel = new TablePanel(entryData);
+        FiltersPanel filtersPanel = new FiltersPanel(tablePanel);
         frame.add(filtersPanel);
         ExtraPanel extraPanel = new ExtraPanel();
         frame.add(extraPanel);
-        TablePanel tablePanel = new TablePanel(entryData);
         frame.add(tablePanel);
         DetailsPanel detailsPanel = new DetailsPanel(entryData);
         frame.add(detailsPanel);

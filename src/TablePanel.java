@@ -37,4 +37,23 @@ public class TablePanel extends JPanel {
         return table;
     }
 
+    public void visibilityColumnSetter(int colVal, boolean visible) {
+        TableColumn column = table.getColumnModel().getColumn(colVal);
+        if (visible) {
+            // Show the column
+            column.setMinWidth(0); // Set to desired width
+            column.setMaxWidth(Integer.MAX_VALUE);
+            column.setPreferredWidth(100);
+        } else {
+            // Hide the column
+            column.setMinWidth(0);
+            column.setMaxWidth(0);
+            column.setPreferredWidth(0);
+        }
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        table.revalidate(); // Revalidate the table to update the display
+        table.repaint(); // Repaint the table to reflect changes
+
+    }
+
 }
