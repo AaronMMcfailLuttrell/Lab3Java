@@ -8,7 +8,7 @@ public class GuiMain {
         JFrame frame = createMainFrame();
 
         //Manages the map for the file
-        String fileLink = "C:\\Users\\aaron\\IdeaProjects\\Lab3Java\\src\\miceData.txt";
+        String fileLink = "src\\miceData.txt";
         Map<String, Map<String, Object>> entryData = FileHandler.readFile(fileLink);
         for (Map.Entry<String, Map<String, Object>> entry : entryData.entrySet()) {
             String key = entry.getKey();

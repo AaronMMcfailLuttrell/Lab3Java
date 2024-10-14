@@ -82,31 +82,43 @@ public class TablePanel extends JPanel {
 
     }
 
-    public void regenTableFilter(Map<String, Map<String, Object>> tableData, String FilterString) {
+    public void regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
 
         this.model.setRowCount(0);
         for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
             Map<String, Object> innerMap = entry.getValue();
-            if (FileHandler.isChar(FilterString)) {
-                char filt = FilterString.charAt(0);
-                if (innerMap.get("sex").toString().charAt(0) == filt) {
-                    model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-                }
-            } else if (FileHandler.isInteger(FilterString)) {
-                int filt = Integer.parseInt(FilterString);
-                if (filt == 19) {
-                    if (Integer.parseInt(innerMap.get("age").toString()) <= filt) {
-                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-                    }
-                } else if (filt == 20) {
-                    if (Integer.parseInt(innerMap.get("age").toString()) >= filt) {
+            if (filterBoxVisible[0]) {
+                if (FileHandler.isChar(FilterString[0])) {
+                    char filt = FilterString[0].charAt(0);
+                    if (innerMap.get("sex").toString().charAt(0) == filt) {
                         model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
                     }
                 }
             }
-
+            if (filterBoxVisible[1]) {
+                if (FileHandler.isChar(FilterString[1])) {
+                    char filt = FilterString[1].charAt(0);
+                    if (innerMap.get("sex").toString().charAt(0) == filt) {
+                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                    }
+                }
+            }
+            if (filterBoxVisible[2]) {
+                if (FileHandler.isDouble(FilterString[2])) {
+                    double filt = Double.parseDouble(FilterString[2]);
+                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt) {
+                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                    }
+                }
+            }
+            if (filterBoxVisible[3]) {
+                if (FileHandler.isDouble(FilterString[3])) {
+                    double filt = Double.parseDouble(FilterString[3]);
+                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
+                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                    }
+                }
+            }
         }
-
     }
-
 }

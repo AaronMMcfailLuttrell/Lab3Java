@@ -9,7 +9,7 @@ public class FiltersPanel extends JPanel {
     public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap) {
         this.originMap = originMap;
         this.tableRef = tableRef;
-        String[] filterSort = new String[] {"Filter Males", "Filter Females", "Filter Age 19 and below", "Filter Age 20 and above"};
+        String[] filterSort = new String[] {"Filter Males", "Filter Females", "Filter Heart Rate below 600", "Filter Heart Rate 600 and above"};
         setLayout(new GridLayout(2, 4));
         setBackground(Color.WHITE);
         setVisible(true);
@@ -28,42 +28,56 @@ public class FiltersPanel extends JPanel {
         }
 
         //Filter strings
-        String[] filterString = new String[] {"M", "F", "19", "20"};
+        String[] filterString = new String[] {"M", "F", "600", "600"};
 
         JCheckBox[] filterBoxes = new JCheckBox[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             filterBoxes[i] = new JCheckBox(filterSort[i]);
         }
 
+        boolean[] boxesSelected = new boolean[filterSort.length];
+        for (int i = 0; i < filterSort.length; i++) {
+            boxesSelected[i] = false;
+        }
+
         //addActionListener made it not possible for me to do this within a loop
         //Filter Cage ID
         filterBoxes[0].addActionListener(e -> {
-            tableFilter(originMap, filterBoxes[0].isSelected(), filterString[0]);
+            boxesSelected[0] = filterBoxes[0].isSelected();
+
+
+            tableFilter(originMap, boxesSelected, filterString);
         });
         add(filterBoxes[0]);
 
         //Filter Age
         filterBoxes[1].addActionListener(e -> {
-            tableFilter(originMap, filterBoxes[1].isSelected(), filterString[1]);
+            boxesSelected[1] = filterBoxes[1].isSelected();
+            tableFilter(originMap, boxesSelected, filterString);
         });
         add(filterBoxes[1]);
 
         //Filter Sex
         filterBoxes[2].addActionListener(e -> {
-            tableFilter(originMap, filterBoxes[2].isSelected(), filterString[2]);
+            boxesSelected[2] = filterBoxes[2].isSelected();
+            tableFilter(originMap, boxesSelected, filterString);
         });
         add(filterBoxes[2]);
 
         //Filter Heart Rate
         filterBoxes[3].addActionListener(e -> {
-            tableFilter(originMap, filterBoxes[3].isSelected(), filterString[3]);
+            boxesSelected[3] = filterBoxes[3].isSelected();
+            tableFilter(originMap, boxesSelected, filterString);
         });
         add(filterBoxes[3]);
 
     }
 
-    private void tableFilter(Map<String, Map<String, Object>> entryData, boolean filterBoxVisible, String FilterString) {
-        tableRef.regenTableFilter(entryData, FilterString);
+    private void tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String[] FilterString) {
+        tableRef.regenTableFilter(entryData, FilterString, filterBoxVisible);
+        for (int i = 0; i < filterBoxVisible.length; i++) {
+            System.out.println(filterBoxVisible[i]);
+        }
     }
 
 }
