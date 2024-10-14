@@ -35,39 +35,34 @@ public class FiltersPanel extends JPanel {
             filterBoxes[i] = new JCheckBox(filterSort[i]);
         }
 
-        boolean[] filterBoxVisible = new boolean[filterSort.length];
-        for (int i = 0; i < filterSort.length; i++) {
-            filterBoxVisible[i] = false;
-        }
-
         //addActionListener made it not possible for me to do this within a loop
         //Filter Cage ID
         filterBoxes[0].addActionListener(e -> {
-            tableFilter(originMap, filterBoxVisible, filterString[0]);
+            tableFilter(originMap, filterBoxes[0].isSelected(), filterString[0]);
         });
         add(filterBoxes[0]);
 
         //Filter Age
         filterBoxes[1].addActionListener(e -> {
-            tableFilter(originMap, filterBoxVisible, filterString[1]);
+            tableFilter(originMap, filterBoxes[1].isSelected(), filterString[1]);
         });
         add(filterBoxes[1]);
 
         //Filter Sex
         filterBoxes[2].addActionListener(e -> {
-            tableFilter(originMap, filterBoxVisible, filterString[2]);
+            tableFilter(originMap, filterBoxes[2].isSelected(), filterString[2]);
         });
         add(filterBoxes[2]);
 
         //Filter Heart Rate
         filterBoxes[3].addActionListener(e -> {
-            tableFilter(originMap, filterBoxVisible, filterString[3]);
+            tableFilter(originMap, filterBoxes[3].isSelected(), filterString[3]);
         });
         add(filterBoxes[3]);
 
     }
 
-    private void tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String FilterString) {
+    private void tableFilter(Map<String, Map<String, Object>> entryData, boolean filterBoxVisible, String FilterString) {
         tableRef.regenTableFilter(entryData, FilterString);
     }
 
