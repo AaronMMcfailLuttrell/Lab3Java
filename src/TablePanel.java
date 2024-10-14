@@ -3,14 +3,16 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.Map;
+import java.util.logging.Filter;
 
 public class TablePanel extends JPanel {
 
     JTable table;
     JScrollPane scrollPane;
+    DefaultTableModel model;
     public TablePanel(Map<String, Map<String, Object>> tableData, DetailsPanel detailsPanel) {
         setLayout(null);
-        DefaultTableModel model = new DefaultTableModel() {
+        model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -77,6 +79,33 @@ public class TablePanel extends JPanel {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         table.revalidate(); // Revalidate the table to update the display
         table.repaint(); // Repaint the table to reflect changes
+
+    }
+
+    public void regenTableFilter(Map<String, Map<String, Object>> tableData, String FilterString) {
+
+        this.model.setRowCount(0);
+        for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
+            Map<String, Object> innerMap = entry.getValue();
+            if (FileHandler.isChar(FilterString)) {
+                char filt = FilterString.charAt(0);
+                if (innerMap.get("sex").toString().charAt(0) == filt) {
+                    model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                }
+            } else if (FileHandler.isInteger(FilterString)) {
+                int filt = Integer.parseInt(FilterString);
+                if (filt == 19) {
+                    if (Integer.parseInt(innerMap.get("age").toString()) <= filt) {
+                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                    }
+                } else if (filt == 20) {
+                    if (Integer.parseInt(innerMap.get("age").toString()) >= filt) {
+                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                    }
+                }
+            }
+
+        }
 
     }
 

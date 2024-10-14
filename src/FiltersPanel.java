@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 public class FiltersPanel extends JPanel {
     private TablePanel tableRef;
-    public FiltersPanel(TablePanel tableRef) {
+    private Map<String, Map<String, Object>> originMap;
+    public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap) {
+        this.originMap = originMap;
         this.tableRef = tableRef;
-        String[] filterSort = new String[] {"Filter Cage ID", "Filter Age", "Filter Sex", "Filter Heart Rate"};
+        String[] filterSort = new String[] {"Filter Males", "Filter Females", "Filter Age 19 and below", "Filter Age 20 and above"};
         setLayout(new GridLayout(2, 4));
         setBackground(Color.WHITE);
         setVisible(true);
@@ -24,6 +27,9 @@ public class FiltersPanel extends JPanel {
 
         }
 
+        //Filter strings
+        String[] filterString = new String[] {"M", "F", "19", "20"};
+
         JCheckBox[] filterBoxes = new JCheckBox[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             filterBoxes[i] = new JCheckBox(filterSort[i]);
@@ -37,37 +43,32 @@ public class FiltersPanel extends JPanel {
         //addActionListener made it not possible for me to do this within a loop
         //Filter Cage ID
         filterBoxes[0].addActionListener(e -> {
-            tableFilter(0, filterBoxVisible);
+            tableFilter(originMap, filterBoxVisible, filterString[0]);
         });
         add(filterBoxes[0]);
 
         //Filter Age
         filterBoxes[1].addActionListener(e -> {
-            tableFilter(1, filterBoxVisible);
+            tableFilter(originMap, filterBoxVisible, filterString[1]);
         });
         add(filterBoxes[1]);
 
         //Filter Sex
         filterBoxes[2].addActionListener(e -> {
-            tableFilter(2, filterBoxVisible);
+            tableFilter(originMap, filterBoxVisible, filterString[2]);
         });
         add(filterBoxes[2]);
 
         //Filter Heart Rate
         filterBoxes[3].addActionListener(e -> {
-            tableFilter(3, filterBoxVisible);
+            tableFilter(originMap, filterBoxVisible, filterString[3]);
         });
         add(filterBoxes[3]);
 
     }
 
-    private void tableFilter(int colIndex, boolean[] filterBoxVisible) {
-        tableRef.visibilityColumnSetter(colIndex, filterBoxVisible[colIndex]);
-        if (filterBoxVisible[colIndex]) {
-            filterBoxVisible[colIndex] = false;
-        } else {
-            filterBoxVisible[colIndex] = true;
-        }
+    private void tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String FilterString) {
+        tableRef.regenTableFilter(entryData, FilterString);
     }
 
 }
