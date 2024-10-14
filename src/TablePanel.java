@@ -46,7 +46,8 @@ public class TablePanel extends JPanel {
                 for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
                     Map<String, Object> innerMap = entry.getValue();
                     //If the selected column equals the id of a specific map entry, get that map entry to then manipulate
-                    if (innerMap.get("cageID") == table.getValueAt(selectedRow, 0).toString()) {
+
+                    if (selectedRow != -1 && innerMap.get("cageID") == table.getValueAt(selectedRow, 0).toString()) {
 
                         //Put map into generation of information to Detail Pane
                         detailsPanel.setDetailInfo(innerMap);
