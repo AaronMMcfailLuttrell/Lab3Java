@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,7 +17,7 @@ public class ChartPane extends JPanel {
     DefaultPieDataset dataset;
     JFreeChart chart;
     ChartPanel chartPanel;
-    public ChartPane() {
+    public ChartPane() throws IOException {
         setLayout(null);
         setBackground(Color.blue);
         setVisible(true);
@@ -21,6 +26,25 @@ public class ChartPane extends JPanel {
         }
         dataset = new DefaultPieDataset();
         chartPanel = new ChartPanel(chart);
+
+        //Test
+        Map<String, Map<String, Object>> testMap = FileHandler.readFile("src\\miceData.txt");
+
+        for (Map.Entry<String, Map<String, Object>> entry : testMap.entrySet()) {
+            String key = entry.getKey();
+            Map<String, Object> innerMap = entry.getValue();
+            if (innerMap.get("sex").toString().equals("M") && (Double.parseDouble(innerMap.get("HeartRate").toString()) < 600)) {
+                totals[0]++;
+            } else if (innerMap.get("sex").toString().equals("M") && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= 600)) {
+                totals[2]++;
+            } else if (innerMap.get("sex").toString().equals("F") && (Double.parseDouble(innerMap.get("HeartRate").toString()) < 600)) {
+                totals[1]++;
+            } else if (innerMap.get("sex").toString().equals("F") && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= 600)) {
+                totals[3]++;
+            }
+        }
+
+        buildPieChart(totals);
     }
 
     public void CollectTotals(int[] totals) {
@@ -52,4 +76,5 @@ public class ChartPane extends JPanel {
         chartPanel.setBounds(0, 0, Constants.TABLE_BOUND_WIDTH, Constants.TABLE_BOUND_HEIGHT); // Set size and position
         add(chartPanel); // Add ChartPanel to the JPanel
     }
+
 }

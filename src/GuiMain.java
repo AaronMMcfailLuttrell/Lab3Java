@@ -32,7 +32,6 @@ public class GuiMain {
         frame.add(tablePanel);
 
         frame.add(detailsPanel);
-
         frame.add(chartPanel);
         StatsPanel statsPanel = new StatsPanel();
         frame.add(statsPanel);
