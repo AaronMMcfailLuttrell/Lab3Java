@@ -97,6 +97,10 @@ public class TablePanel extends JPanel {
 
         //Temp
         int[] tempArray = new int[4];
+        for (int i = 0; i < tempArray.length; i++) {
+            tempArray[i] = 0;
+        }
+
         for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
             Map<String, Object> innerMap = entry.getValue();
             if ((innerMap.get("sex").toString().equalsIgnoreCase("M")) && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= Double.parseDouble(FilterString[3]))) {
@@ -109,7 +113,6 @@ public class TablePanel extends JPanel {
                 tempArray[1]++;
             }
         }
-
 
         for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
             Map<String, Object> innerMap = entry.getValue();
@@ -150,173 +153,71 @@ public class TablePanel extends JPanel {
             if (matchesFilters) {
                 model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
 
+                for (int innerI = 0; innerI < tempArray.length; innerI++) {
+                    if ((filterBoxVisible[0] || filterBoxVisible[1]) && !(filterBoxVisible[2] || filterBoxVisible[3])) {
+                        if (filterBoxVisible[0]) {
+                            values[0] = tempArray[0];
+                            values[2] = tempArray[2];
+                        }
+                        if (filterBoxVisible[1]) {
+                            values[1] = tempArray[1];
+                            values[3] = tempArray[3];
+                        }
+                    } else if ((filterBoxVisible[2] || filterBoxVisible[3]) && !(filterBoxVisible[0] || filterBoxVisible[1])) {
+                        if (filterBoxVisible[2]) {
+                            values[0] = tempArray[0];
+                            values[1] = tempArray[1];
+                        }
+                        if (filterBoxVisible[3]) {
+                            values[2] = tempArray[2];
+                            values[3] = tempArray[3];
+                        }
+                    } else if ((filterBoxVisible[0] ^ filterBoxVisible[1]) && (filterBoxVisible[2] ^ filterBoxVisible[3])) {
+                        if (filterBoxVisible[0]) {
+                            if (filterBoxVisible[2]) {
+                                values[0] = tempArray[0];
+                            } else if (filterBoxVisible[3]) {
+                                values[2] = tempArray[2];
+                            }
+                        } else if (filterBoxVisible[1]) {
+                            if (filterBoxVisible[2]) {
+                                values[1] = tempArray[1];
+                            } else if (filterBoxVisible[3]) {
+                                values[3] = tempArray[3];
+                            }
+                        }
+                    } else if ((filterBoxVisible[0] && filterBoxVisible[1]) && (filterBoxVisible[2] ^ filterBoxVisible[3])) {
+                        if (filterBoxVisible[2]) {
+                            values[0] = tempArray[0];
+                            values[1] = tempArray[1];
+                        } else if (filterBoxVisible[3]) {
+                            values[2] = tempArray[2];
+                            values[3] = tempArray[3];
+                        }
+                    } else if ((filterBoxVisible[2] && filterBoxVisible[3]) && (filterBoxVisible[0] ^ filterBoxVisible[1])) {
+                        if (filterBoxVisible[0]) {
+                            values[0] = tempArray[0];
+                            values[2] = tempArray[2];
+                        } else if (filterBoxVisible[1]) {
+                            values[1] = tempArray[1];
+                            values[3] = tempArray[3];
+                        }
+                    } else if ((filterBoxVisible[0] && filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) || !(filterBoxVisible[0] || filterBoxVisible[1] || filterBoxVisible[2] || filterBoxVisible[3])) {
+                        for (int f = 0; f < values.length; f++) {
+                            values[f] = tempArray[f];
+                        }
+                    }
 
-                if (!filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        values[2]++;
-                    } else {
-                        values[3]++;
-                    }
-
-                } else if (!filterBoxVisible[0] && !filterBoxVisible[1] && filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        values[0]++;
-                    } else {
-                        values[1]++;
-                    }
-                } else if (!filterBoxVisible[0] && !filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[0]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[2]++;
-                        }
-                    } else {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[1]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[3]++;
-                        }
-                    }
-                } else if (!filterBoxVisible[0] && filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("F")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[1]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[3]++;
-                        }
-
-                    }
-                } else if (!filterBoxVisible[0] && filterBoxVisible[1] && !filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("F")) {
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString())  >=Double.parseDouble(FilterString[3])) {
-                            values[3]++;
-                        }
-                    }
-                } else if (!filterBoxVisible[0] && filterBoxVisible[1] && filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("F")) {
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < Double.parseDouble(FilterString[3])) {
-                            values[1]++;
-                        }
-                    }
-                } else if (!filterBoxVisible[0] && filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("F")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[1]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[3]++;
-                        }
-
-                    }
-                } else if (filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[0]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[2]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= Double.parseDouble(FilterString[3])) {
-                            values[2]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && !filterBoxVisible[1] && filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < Double.parseDouble(FilterString[3])) {
-                            values[0]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && !filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= Double.parseDouble(FilterString[3])) {
-                            values[2]++;
-                        } else {
-                            values[0]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[0]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[2]++;
-                        }
-                    } else {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[1]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[3]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && filterBoxVisible[1] && !filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[2]++;
-                        }
-                    } else {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[3]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && filterBoxVisible[1] && filterBoxVisible[2] && !filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt) {
-                            values[0]++;
-                        }
-                    } else {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt) {
-                            values[1]++;
-                        }
-                    }
-                } else if (filterBoxVisible[0] && filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) {
-                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[0]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[2]++;
-                        }
-                    } else {
-                        double filt = Double.parseDouble(FilterString[2]);
-                        double filt1 = Double.parseDouble(FilterString[3]);
-                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                            values[1]++;
-                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                            values[3]++;
-                        }
-                    }
                 }
-
+                for (int inI = 0; inI < values.length; inI++) {
+                    System.out.println(values[inI]);
+                }
             }
 
             // If no filters are active, show all data
             if (!filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
                 model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                /*
                 if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
                     double filt = Double.parseDouble(FilterString[2]);
                     double filt1 = Double.parseDouble(FilterString[3]);
@@ -334,6 +235,14 @@ public class TablePanel extends JPanel {
                         values[3]++;
                     }
                 }
+                */
+
+                for (int innerI = 0; innerI < tempArray.length; innerI++) {
+                    if (filterBoxVisible[innerI]) {
+                        values[innerI] = tempArray[innerI];
+                    }
+                }
+
             }
         }
 

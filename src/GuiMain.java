@@ -10,15 +10,7 @@ public class GuiMain {
         //Manages the map for the file
         String fileLink = "src\\miceData.txt";
         Map<String, Map<String, Object>> entryData = FileHandler.readFile(fileLink);
-        for (Map.Entry<String, Map<String, Object>> entry : entryData.entrySet()) {
-            String key = entry.getKey();
-            Map<String, Object> value = entry.getValue();
-            System.out.println("Key: " + key + " ");
-            for (Map.Entry<String, Object> innerMap : value.entrySet()) {
-                System.out.print(innerMap.getKey() + ": " + innerMap.getValue() + ", ");
-            }
-            System.out.println();
-        }
+
 
 
         //Temp
