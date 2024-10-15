@@ -1,3 +1,5 @@
+import org.jfree.data.general.DefaultPieDataset;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -6,7 +8,7 @@ import java.util.Map;
 public class FiltersPanel extends JPanel {
     private TablePanel tableRef;
     private Map<String, Map<String, Object>> originMap;
-    public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap) {
+    public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap, ChartPane pieSet) {
         this.originMap = originMap;
         this.tableRef = tableRef;
         String[] filterSort = new String[] {"Filter Males", "Filter Females", "Filter Heart Rate below 600", "Filter Heart Rate 600 and above"};
@@ -44,9 +46,8 @@ public class FiltersPanel extends JPanel {
         //Filter Cage ID
         filterBoxes[0].addActionListener(e -> {
             boxesSelected[0] = filterBoxes[0].isSelected();
-
-
             tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart();
         });
         add(filterBoxes[0]);
 
@@ -54,6 +55,7 @@ public class FiltersPanel extends JPanel {
         filterBoxes[1].addActionListener(e -> {
             boxesSelected[1] = filterBoxes[1].isSelected();
             tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart();
         });
         add(filterBoxes[1]);
 
@@ -61,6 +63,7 @@ public class FiltersPanel extends JPanel {
         filterBoxes[2].addActionListener(e -> {
             boxesSelected[2] = filterBoxes[2].isSelected();
             tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart();
         });
         add(filterBoxes[2]);
 
@@ -68,6 +71,7 @@ public class FiltersPanel extends JPanel {
         filterBoxes[3].addActionListener(e -> {
             boxesSelected[3] = filterBoxes[3].isSelected();
             tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart();
         });
         add(filterBoxes[3]);
 

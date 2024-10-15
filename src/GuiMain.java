@@ -22,16 +22,17 @@ public class GuiMain {
 
 
         //Temp
+        ChartPane chartPanel = new ChartPane();
         DetailsPanel detailsPanel = new DetailsPanel();
         TablePanel tablePanel = new TablePanel(entryData, detailsPanel);
-        FiltersPanel filtersPanel = new FiltersPanel(tablePanel, entryData);
+        FiltersPanel filtersPanel = new FiltersPanel(tablePanel, entryData, chartPanel);
         frame.add(filtersPanel);
         ExtraPanel extraPanel = new ExtraPanel();
         frame.add(extraPanel);
         frame.add(tablePanel);
 
         frame.add(detailsPanel);
-        ChartPane chartPanel = new ChartPane();
+
         frame.add(chartPanel);
         StatsPanel statsPanel = new StatsPanel();
         frame.add(statsPanel);

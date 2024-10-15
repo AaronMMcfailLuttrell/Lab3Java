@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Filter;
 
@@ -84,15 +85,19 @@ public class TablePanel extends JPanel {
     }
 
     public void regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
-
+        /*
         this.model.setRowCount(0);
         for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
             Map<String, Object> innerMap = entry.getValue();
+
+
             if (filterBoxVisible[0]) {
                 if (FileHandler.isChar(FilterString[0])) {
                     char filt = FilterString[0].charAt(0);
                     if (innerMap.get("sex").toString().charAt(0) == filt) {
+
                         model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+
                     }
                 }
             }
@@ -120,6 +125,67 @@ public class TablePanel extends JPanel {
                     }
                 }
             }
+
+            if (filterBoxVisible[0] == false && filterBoxVisible[1] == false && filterBoxVisible[2] == false && filterBoxVisible[3] == false) {
+                model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+            }
+
+
+
+        } */
+
+
+
+
+        this.model.setRowCount(0); // Clear the table
+
+        for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
+            Map<String, Object> innerMap = entry.getValue();
+
+            // Initialize a flag that will only be true if all active filters are satisfied
+            boolean matchesFilters = true;
+
+            // Filter for sex (male or female)
+            if ((filterBoxVisible[0] && filterBoxVisible[1]) == false) { // If both are selected, show all
+                if (filterBoxVisible[0] && !innerMap.get("sex").toString().equalsIgnoreCase("M")) {
+                    matchesFilters = false;
+                }
+                if (filterBoxVisible[1] && !innerMap.get("sex").toString().equalsIgnoreCase("F")) {
+                    matchesFilters = false;
+                }
+            }
+
+            // Filter for heart rate below 600
+            if ((filterBoxVisible[2] && filterBoxVisible[3]) == false) { // If both are selected, show all
+                if (filterBoxVisible[2] && FileHandler.isDouble(FilterString[2])) {
+                    double filt = Double.parseDouble(FilterString[2]);
+                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
+                        matchesFilters = false;
+                    }
+                }
+
+                // Filter for heart rate above 600
+                if (filterBoxVisible[3] && FileHandler.isDouble(FilterString[3])) {
+                    double filt = Double.parseDouble(FilterString[3]);
+                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt) {
+                        matchesFilters = false;
+                    }
+                }
+            }
+
+            // If all active filters match, add the row
+            if (matchesFilters) {
+                model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+            }
+
+            // If no filters are active, show all data
+            if (!filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
+                model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+            }
         }
+
+
+
     }
+
 }
