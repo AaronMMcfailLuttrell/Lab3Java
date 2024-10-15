@@ -46,42 +46,43 @@ public class FiltersPanel extends JPanel {
         //Filter Cage ID
         filterBoxes[0].addActionListener(e -> {
             boxesSelected[0] = filterBoxes[0].isSelected();
-            tableFilter(originMap, boxesSelected, filterString);
-            pieSet.buildPieChart();
+            int[] placeholder1 = tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart(placeholder1);
         });
         add(filterBoxes[0]);
 
         //Filter Age
         filterBoxes[1].addActionListener(e -> {
             boxesSelected[1] = filterBoxes[1].isSelected();
-            tableFilter(originMap, boxesSelected, filterString);
-            pieSet.buildPieChart();
+            int[] placeholder2 = tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart(placeholder2);
         });
         add(filterBoxes[1]);
 
         //Filter Sex
         filterBoxes[2].addActionListener(e -> {
             boxesSelected[2] = filterBoxes[2].isSelected();
-            tableFilter(originMap, boxesSelected, filterString);
-            pieSet.buildPieChart();
+            int[] placeholder3 = tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart(placeholder3);
         });
         add(filterBoxes[2]);
 
         //Filter Heart Rate
         filterBoxes[3].addActionListener(e -> {
             boxesSelected[3] = filterBoxes[3].isSelected();
-            tableFilter(originMap, boxesSelected, filterString);
-            pieSet.buildPieChart();
+            int[] placeholder4 = tableFilter(originMap, boxesSelected, filterString);
+            pieSet.buildPieChart(placeholder4);
         });
         add(filterBoxes[3]);
 
     }
 
-    private void tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String[] FilterString) {
-        tableRef.regenTableFilter(entryData, FilterString, filterBoxVisible);
+    private int[] tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String[] FilterString) {
+        int[] values = tableRef.regenTableFilter(entryData, FilterString, filterBoxVisible);
         for (int i = 0; i < filterBoxVisible.length; i++) {
             System.out.println(filterBoxVisible[i]);
         }
+        return values;
     }
 
 }

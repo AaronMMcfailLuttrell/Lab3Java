@@ -19,18 +19,25 @@ public class ChartPane extends JPanel {
         for (int i = 0; i < totals.length; i++) {
             totals[i] = 0;
         }
+        dataset = new DefaultPieDataset();
+        chartPanel = new ChartPanel(chart);
     }
 
     public void CollectTotals(int[] totals) {
         for (int i = 0; i < totals.length; i++) {
-            totals[i] += totals[i];
+            this.totals[i] = totals[i];
         }
     }
 
-    public void buildPieChart() {
-        dataset = new DefaultPieDataset();
+    public void buildPieChart(int[] pieData) {
+
+        CollectTotals(pieData);
+        dataset.clear();
+
         for (int i = 0; i < pieSectionNames.length; i++) {
-            dataset.setValue(pieSectionNames[i], totals[i]);
+            if (totals[i] != 0) {
+                dataset.setValue(pieSectionNames[i], totals[i]);
+            }
         }
 
         chart = ChartFactory.createPieChart(
@@ -41,7 +48,7 @@ public class ChartPane extends JPanel {
                 false               // No URLs
         );
 
-        chartPanel = new ChartPanel(chart);
+        chartPanel.setChart(chart);
         chartPanel.setBounds(0, 0, Constants.TABLE_BOUND_WIDTH, Constants.TABLE_BOUND_HEIGHT); // Set size and position
         add(chartPanel); // Add ChartPanel to the JPanel
     }

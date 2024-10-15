@@ -11,8 +11,13 @@ public class TablePanel extends JPanel {
     JTable table;
     JScrollPane scrollPane;
     DefaultTableModel model;
+    int[] values;
     public TablePanel(Map<String, Map<String, Object>> tableData, DetailsPanel detailsPanel) {
         setLayout(null);
+        values = new int[4];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = 0;
+        }
         model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -84,59 +89,10 @@ public class TablePanel extends JPanel {
 
     }
 
-    public void regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
-        /*
-        this.model.setRowCount(0);
-        for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
-            Map<String, Object> innerMap = entry.getValue();
-
-
-            if (filterBoxVisible[0]) {
-                if (FileHandler.isChar(FilterString[0])) {
-                    char filt = FilterString[0].charAt(0);
-                    if (innerMap.get("sex").toString().charAt(0) == filt) {
-
-                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-
-                    }
-                }
-            }
-            if (filterBoxVisible[1]) {
-                if (FileHandler.isChar(FilterString[1])) {
-                    char filt = FilterString[1].charAt(0);
-                    if (innerMap.get("sex").toString().charAt(0) == filt) {
-                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-                    }
-                }
-            }
-            if (filterBoxVisible[2]) {
-                if (FileHandler.isDouble(FilterString[2])) {
-                    double filt = Double.parseDouble(FilterString[2]);
-                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt) {
-                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-                    }
-                }
-            }
-            if (filterBoxVisible[3]) {
-                if (FileHandler.isDouble(FilterString[3])) {
-                    double filt = Double.parseDouble(FilterString[3]);
-                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                        model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-                    }
-                }
-            }
-
-            if (filterBoxVisible[0] == false && filterBoxVisible[1] == false && filterBoxVisible[2] == false && filterBoxVisible[3] == false) {
-                model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-            }
-
-
-
-        } */
-
-
-
-
+    public int[] regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = 0;
+        }
         this.model.setRowCount(0); // Clear the table
 
         for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
@@ -174,8 +130,60 @@ public class TablePanel extends JPanel {
             }
 
             // If all active filters match, add the row
+            //[0] = less than 600 for male, [1] = less than 600 for female, [2] = greater than 600 for male, [3] = greater than for female
             if (matchesFilters) {
                 model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
+                if (!filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && filterBoxVisible[3]) {
+                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
+                        values[2]++;
+                    } else {
+                        values[3]++;
+                    }
+
+                } else if (!filterBoxVisible[0] && !filterBoxVisible[1] && filterBoxVisible[2] && !filterBoxVisible[3]) {
+                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
+                        values[0]++;
+                    } else {
+                        values[1]++;
+                    }
+                } else if (!filterBoxVisible[0] && filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
+                    if (innerMap.get("sex").toString().equalsIgnoreCase("F")) {
+                        double filt = Double.parseDouble(FilterString[2]);
+                        double filt1 = Double.parseDouble(FilterString[3]);
+                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
+                            values[1]++;
+                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
+                            values[3]++;
+                        }
+
+                    }
+                } else if (filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
+                    if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
+                        double filt = Double.parseDouble(FilterString[2]);
+                        double filt1 = Double.parseDouble(FilterString[3]);
+                        if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
+                            values[0]++;
+                        } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
+                            values[2]++;
+                        }
+                    }
+                } else if (!filterBoxVisible[0] && !filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) {
+                    double filt = Double.parseDouble(FilterString[2]);
+                    double filt1 = Double.parseDouble(FilterString[3]);
+                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
+                        if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
+                            values[0]++;
+                        } else {
+                            values[1]++;
+                        }
+                    } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
+                        if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
+                            values[2]++;
+                        } else {
+                            values[3]++;
+                        }
+                    }
+                }
             }
 
             // If no filters are active, show all data
@@ -185,7 +193,7 @@ public class TablePanel extends JPanel {
         }
 
 
-
+        return values;
     }
 
 }
