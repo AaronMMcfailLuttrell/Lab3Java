@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Filter;
+import java.util.stream.Collectors;
 
 public class TablePanel extends JPanel {
 
@@ -89,162 +90,57 @@ public class TablePanel extends JPanel {
 
     }
 
-    public int[] regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
+    public static int[] regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
+        /*
+          Generate Panels based on filter
+        */
+        //Create a counter that will pass to the generation of the chart
+        int[] values = new int[4];
         for (int i = 0; i < values.length; i++) {
             values[i] = 0;
         }
-        this.model.setRowCount(0); // Clear the table
 
-        //Temp
-        int[] tempArray = new int[4];
-        for (int i = 0; i < tempArray.length; i++) {
-            tempArray[i] = 0;
+        if (filterBoxVisible[0]) {
+            Map<String, Map<String, Object>> filteredMap = tableData.entrySet().stream()
+                    .filter(sex -> sex.getValue().get("sex").toString().equalsIgnoreCase("M"))
+                    .filter(lessThan -> Double.parseDouble(lessThan.getValue().get("HeartRate").toString()) < 600)
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            Map.Entry::getValue));
+            values[0] = filteredMap.size();
+            System.out.println(values[0]);
+        }
+        if (filterBoxVisible[1]) {
+            Map<String, Map<String, Object>> filteredMap = tableData.entrySet().stream()
+                    .filter(sex -> sex.getValue().get("sex").toString().equalsIgnoreCase("F"))
+                    .filter(lessThan -> Double.parseDouble(lessThan.getValue().get("HeartRate").toString()) < 600)
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            Map.Entry::getValue));
+            values[1] = filteredMap.size();
+            System.out.println(values[1]);
+        }
+        if (filterBoxVisible[2]) {
+            Map<String, Map<String, Object>> filteredMap = tableData.entrySet().stream()
+                    .filter(sex -> sex.getValue().get("sex").toString().equalsIgnoreCase("M"))
+                    .filter(greaterThan -> Double.parseDouble(greaterThan.getValue().get("HeartRate").toString()) >= 600)
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            Map.Entry::getValue));
+            values[2] = filteredMap.size();
+            System.out.println(values[2]);
+        }
+        if (filterBoxVisible[3]) {
+            Map<String, Map<String, Object>> filteredMap = tableData.entrySet().stream()
+                    .filter(sex -> sex.getValue().get("sex").toString().equalsIgnoreCase("F"))
+                    .filter(greaterThan -> Double.parseDouble(greaterThan.getValue().get("HeartRate").toString()) >= 600)
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            Map.Entry::getValue));
+            values[3] = filteredMap.size();
+            System.out.println(values[3]);
         }
 
-        for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
-            Map<String, Object> innerMap = entry.getValue();
-            if ((innerMap.get("sex").toString().equalsIgnoreCase("M")) && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= Double.parseDouble(FilterString[3]))) {
-                tempArray[2]++;
-            } else if ((innerMap.get("sex").toString().equalsIgnoreCase("M")) && (Double.parseDouble(innerMap.get("HeartRate").toString()) < Double.parseDouble(FilterString[3]))) {
-                tempArray[0]++;
-            } else if ((innerMap.get("sex").toString().equalsIgnoreCase("F")) && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= Double.parseDouble(FilterString[3]))) {
-                tempArray[3]++;
-            } else if ((innerMap.get("sex").toString().equalsIgnoreCase("F")) && (Double.parseDouble(innerMap.get("HeartRate").toString()) < Double.parseDouble(FilterString[3]))) {
-                tempArray[1]++;
-            }
-        }
 
-        for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
-            Map<String, Object> innerMap = entry.getValue();
 
-            // Initialize a flag that will only be true if all active filters are satisfied
-            boolean matchesFilters = true;
 
-            // Filter for sex (male or female)
-            if ((filterBoxVisible[0] && filterBoxVisible[1]) == false) { // If both are selected, show all
-                if (filterBoxVisible[0] && !innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                    matchesFilters = false;
-                }
-                if (filterBoxVisible[1] && !innerMap.get("sex").toString().equalsIgnoreCase("F")) {
-                    matchesFilters = false;
-                }
-            }
 
-            // Filter for heart rate below 600
-            if ((filterBoxVisible[2] && filterBoxVisible[3]) == false) { // If both are selected, show all
-                if (filterBoxVisible[2] && FileHandler.isDouble(FilterString[2])) {
-                    double filt = Double.parseDouble(FilterString[2]);
-                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                        matchesFilters = false;
-                    }
-                }
-
-                // Filter for heart rate above 600
-                if (filterBoxVisible[3] && FileHandler.isDouble(FilterString[3])) {
-                    double filt = Double.parseDouble(FilterString[3]);
-                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt) {
-                        matchesFilters = false;
-                    }
-                }
-            }
-
-            // If all active filters match, add the row
-            //[0] = less than 600 for male, [1] = less than 600 for female, [2] = greater than 600 for male, [3] = greater than for female
-            if (matchesFilters) {
-                model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-
-                for (int innerI = 0; innerI < tempArray.length; innerI++) {
-                    if ((filterBoxVisible[0] || filterBoxVisible[1]) && !(filterBoxVisible[2] || filterBoxVisible[3])) {
-                        if (filterBoxVisible[0]) {
-                            values[0] = tempArray[0];
-                            values[2] = tempArray[2];
-                        }
-                        if (filterBoxVisible[1]) {
-                            values[1] = tempArray[1];
-                            values[3] = tempArray[3];
-                        }
-                    } else if ((filterBoxVisible[2] || filterBoxVisible[3]) && !(filterBoxVisible[0] || filterBoxVisible[1])) {
-                        if (filterBoxVisible[2]) {
-                            values[0] = tempArray[0];
-                            values[1] = tempArray[1];
-                        }
-                        if (filterBoxVisible[3]) {
-                            values[2] = tempArray[2];
-                            values[3] = tempArray[3];
-                        }
-                    } else if ((filterBoxVisible[0] ^ filterBoxVisible[1]) && (filterBoxVisible[2] ^ filterBoxVisible[3])) {
-                        if (filterBoxVisible[0]) {
-                            if (filterBoxVisible[2]) {
-                                values[0] = tempArray[0];
-                            } else if (filterBoxVisible[3]) {
-                                values[2] = tempArray[2];
-                            }
-                        } else if (filterBoxVisible[1]) {
-                            if (filterBoxVisible[2]) {
-                                values[1] = tempArray[1];
-                            } else if (filterBoxVisible[3]) {
-                                values[3] = tempArray[3];
-                            }
-                        }
-                    } else if ((filterBoxVisible[0] && filterBoxVisible[1]) && (filterBoxVisible[2] ^ filterBoxVisible[3])) {
-                        if (filterBoxVisible[2]) {
-                            values[0] = tempArray[0];
-                            values[1] = tempArray[1];
-                        } else if (filterBoxVisible[3]) {
-                            values[2] = tempArray[2];
-                            values[3] = tempArray[3];
-                        }
-                    } else if ((filterBoxVisible[2] && filterBoxVisible[3]) && (filterBoxVisible[0] ^ filterBoxVisible[1])) {
-                        if (filterBoxVisible[0]) {
-                            values[0] = tempArray[0];
-                            values[2] = tempArray[2];
-                        } else if (filterBoxVisible[1]) {
-                            values[1] = tempArray[1];
-                            values[3] = tempArray[3];
-                        }
-                    } else if ((filterBoxVisible[0] && filterBoxVisible[1] && filterBoxVisible[2] && filterBoxVisible[3]) || !(filterBoxVisible[0] || filterBoxVisible[1] || filterBoxVisible[2] || filterBoxVisible[3])) {
-                        for (int f = 0; f < values.length; f++) {
-                            values[f] = tempArray[f];
-                        }
-                    }
-
-                }
-                for (int inI = 0; inI < values.length; inI++) {
-                    System.out.println(values[inI]);
-                }
-            }
-
-            // If no filters are active, show all data
-            if (!filterBoxVisible[0] && !filterBoxVisible[1] && !filterBoxVisible[2] && !filterBoxVisible[3]) {
-                model.addRow(new Object[]{innerMap.get("cageID"), innerMap.get("age"), innerMap.get("sex"), innerMap.get("HeartRate")});
-                /*
-                if (innerMap.get("sex").toString().equalsIgnoreCase("M")) {
-                    double filt = Double.parseDouble(FilterString[2]);
-                    double filt1 = Double.parseDouble(FilterString[3]);
-                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                        values[0]++;
-                    } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                        values[2]++;
-                    }
-                } else {
-                    double filt = Double.parseDouble(FilterString[2]);
-                    double filt1 = Double.parseDouble(FilterString[3]);
-                    if (Double.parseDouble(innerMap.get("HeartRate").toString()) < filt1) {
-                        values[1]++;
-                    } else if (Double.parseDouble(innerMap.get("HeartRate").toString()) >= filt) {
-                        values[3]++;
-                    }
-                }
-                */
-
-                for (int innerI = 0; innerI < tempArray.length; innerI++) {
-                    if (filterBoxVisible[innerI]) {
-                        values[innerI] = tempArray[innerI];
-                    }
-                }
-
-            }
-        }
 
 
         return values;

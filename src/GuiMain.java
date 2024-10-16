@@ -14,6 +14,12 @@ public class GuiMain {
 
 
         //Temp
+        //chartPanel constructors always start with boxes activated
+        boolean[] allActivated = new boolean[4];
+        for (int g = 0; g < allActivated.length; g++) {
+            allActivated[g] = true;
+        }
+
         ChartPane chartPanel = new ChartPane();
         DetailsPanel detailsPanel = new DetailsPanel();
         TablePanel tablePanel = new TablePanel(entryData, detailsPanel);

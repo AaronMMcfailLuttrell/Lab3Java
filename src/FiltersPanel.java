@@ -11,8 +11,8 @@ public class FiltersPanel extends JPanel {
     public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap, ChartPane pieSet) {
         this.originMap = originMap;
         this.tableRef = tableRef;
-        String[] filterSort = new String[] {"Filter Males", "Filter Females", "Filter Heart Rate below 600", "Filter Heart Rate 600 and above"};
-        setLayout(new GridLayout(2, 4));
+        String[] filterSort = new String[] {"Filter Males, Heart Rate below 600", "Filter Females, Heart Rate below 600", "Filter Males, Heart Rate above 600", "Filter Females, Heart Rate above 600"};
+        setLayout(new GridLayout(6, 1));
         setBackground(Color.WHITE);
         setVisible(true);
         JTextField textBox = new JTextField();
@@ -35,11 +35,12 @@ public class FiltersPanel extends JPanel {
         JCheckBox[] filterBoxes = new JCheckBox[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             filterBoxes[i] = new JCheckBox(filterSort[i]);
+            filterBoxes[i].setSelected(true);
         }
 
         boolean[] boxesSelected = new boolean[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
-            boxesSelected[i] = false;
+            boxesSelected[i] = true;
         }
 
         //addActionListener made it not possible for me to do this within a loop

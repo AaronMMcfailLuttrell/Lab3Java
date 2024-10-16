@@ -21,29 +21,18 @@ public class ChartPane extends JPanel {
         setLayout(null);
         setBackground(Color.blue);
         setVisible(true);
-        for (int i = 0; i < totals.length; i++) {
-            totals[i] = 0;
-        }
         dataset = new DefaultPieDataset();
         chartPanel = new ChartPanel(chart);
 
         //Test
         Map<String, Map<String, Object>> testMap = FileHandler.readFile("src\\miceData.txt");
-
-        for (Map.Entry<String, Map<String, Object>> entry : testMap.entrySet()) {
-            String key = entry.getKey();
-            Map<String, Object> innerMap = entry.getValue();
-            if (innerMap.get("sex").toString().equals("M") && (Double.parseDouble(innerMap.get("HeartRate").toString()) < 600)) {
-                totals[0]++;
-            } else if (innerMap.get("sex").toString().equals("M") && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= 600)) {
-                totals[2]++;
-            } else if (innerMap.get("sex").toString().equals("F") && (Double.parseDouble(innerMap.get("HeartRate").toString()) < 600)) {
-                totals[1]++;
-            } else if (innerMap.get("sex").toString().equals("F") && (Double.parseDouble(innerMap.get("HeartRate").toString()) >= 600)) {
-                totals[3]++;
-            }
+        String[] filterString = new String[] {"M", "F", "600", "600"};
+        boolean[] allSelected = new boolean[4];
+        for (int i = 0; i < allSelected.length; i++) {
+            allSelected[i] = true;
         }
-
+        //Construction of ChartPane assumes all boxes are true, as constructor for Filters checks all boxes by default
+        totals = TablePanel.regenTableFilter(testMap, filterString, allSelected);
         buildPieChart(totals);
     }
 
