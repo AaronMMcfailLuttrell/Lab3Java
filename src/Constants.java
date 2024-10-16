@@ -6,7 +6,7 @@ public class Constants {
             "SAmplitude",  "STHeight",  "TAmplitude",  "FirstBeat",  "LastBeat"};
     public static final int TABLE_BOUND_WIDTH = FRAME_WIDTH/2;
     public static final int TABLE_BOUND_HEIGHT = FRAME_HEIGHT/3 - 20;
-
+    public static final String[] filterString = new String[] {"M", "F", "600", "600"};
 
 
 

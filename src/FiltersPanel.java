@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class FiltersPanel extends JPanel {
     private TablePanel tableRef;
+    private static boolean[] boxesSelected;
     private Map<String, Map<String, Object>> originMap;
     public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap, ChartPane pieSet) {
         this.originMap = originMap;
@@ -29,8 +30,6 @@ public class FiltersPanel extends JPanel {
 
         }
 
-        //Filter strings
-        String[] filterString = new String[] {"M", "F", "600", "600"};
 
         JCheckBox[] filterBoxes = new JCheckBox[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
@@ -38,7 +37,7 @@ public class FiltersPanel extends JPanel {
             filterBoxes[i].setSelected(true);
         }
 
-        boolean[] boxesSelected = new boolean[filterSort.length];
+        boxesSelected = new boolean[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             boxesSelected[i] = true;
         }
@@ -47,7 +46,7 @@ public class FiltersPanel extends JPanel {
         //Filter Cage ID
         filterBoxes[0].addActionListener(e -> {
             boxesSelected[0] = filterBoxes[0].isSelected();
-            int[] placeholder1 = tableFilter(originMap, boxesSelected, filterString);
+            int[] placeholder1 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder1);
         });
         add(filterBoxes[0]);
@@ -55,7 +54,7 @@ public class FiltersPanel extends JPanel {
         //Filter Age
         filterBoxes[1].addActionListener(e -> {
             boxesSelected[1] = filterBoxes[1].isSelected();
-            int[] placeholder2 = tableFilter(originMap, boxesSelected, filterString);
+            int[] placeholder2 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder2);
         });
         add(filterBoxes[1]);
@@ -63,7 +62,7 @@ public class FiltersPanel extends JPanel {
         //Filter Sex
         filterBoxes[2].addActionListener(e -> {
             boxesSelected[2] = filterBoxes[2].isSelected();
-            int[] placeholder3 = tableFilter(originMap, boxesSelected, filterString);
+            int[] placeholder3 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder3);
         });
         add(filterBoxes[2]);
@@ -71,7 +70,7 @@ public class FiltersPanel extends JPanel {
         //Filter Heart Rate
         filterBoxes[3].addActionListener(e -> {
             boxesSelected[3] = filterBoxes[3].isSelected();
-            int[] placeholder4 = tableFilter(originMap, boxesSelected, filterString);
+            int[] placeholder4 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder4);
         });
         add(filterBoxes[3]);
@@ -80,10 +79,11 @@ public class FiltersPanel extends JPanel {
 
     private int[] tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String[] FilterString) {
         int[] values = tableRef.regenTableFilter(entryData, FilterString, filterBoxVisible);
-        for (int i = 0; i < filterBoxVisible.length; i++) {
-            System.out.println(filterBoxVisible[i]);
-        }
         return values;
+    }
+
+    public static boolean[] getBoolValues() {
+        return boxesSelected;
     }
 
 }

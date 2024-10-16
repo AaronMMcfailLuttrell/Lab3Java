@@ -31,8 +31,9 @@ public class ChartPane extends JPanel {
         for (int i = 0; i < allSelected.length; i++) {
             allSelected[i] = true;
         }
+        TablePanel panel = new TablePanel(testMap, new DetailsPanel());
         //Construction of ChartPane assumes all boxes are true, as constructor for Filters checks all boxes by default
-        totals = TablePanel.regenTableFilter(testMap, filterString, allSelected);
+        totals = panel.regenTableFilter(testMap, filterString, allSelected);
         buildPieChart(totals);
     }
 
