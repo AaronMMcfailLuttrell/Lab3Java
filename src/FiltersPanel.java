@@ -3,12 +3,15 @@ import org.jfree.data.general.DefaultPieDataset;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FiltersPanel extends JPanel {
     private TablePanel tableRef;
     private static boolean[] boxesSelected;
     private Map<String, Map<String, Object>> originMap;
+    private LinkedHashMap<String, Map<String, Object>> filterMap;
     public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap, ChartPane pieSet) {
         this.originMap = originMap;
         this.tableRef = tableRef;
@@ -48,6 +51,7 @@ public class FiltersPanel extends JPanel {
             boxesSelected[0] = filterBoxes[0].isSelected();
             int[] placeholder1 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder1);
+            genStatPane(boxesSelected);
         });
         add(filterBoxes[0]);
 
@@ -56,6 +60,7 @@ public class FiltersPanel extends JPanel {
             boxesSelected[1] = filterBoxes[1].isSelected();
             int[] placeholder2 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder2);
+            genStatPane(boxesSelected);
         });
         add(filterBoxes[1]);
 
@@ -64,6 +69,7 @@ public class FiltersPanel extends JPanel {
             boxesSelected[2] = filterBoxes[2].isSelected();
             int[] placeholder3 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder3);
+            genStatPane(boxesSelected);
         });
         add(filterBoxes[2]);
 
@@ -72,6 +78,7 @@ public class FiltersPanel extends JPanel {
             boxesSelected[3] = filterBoxes[3].isSelected();
             int[] placeholder4 = tableFilter(originMap, boxesSelected, Constants.filterString);
             pieSet.buildPieChart(placeholder4);
+            genStatPane(boxesSelected);
         });
         add(filterBoxes[3]);
 
@@ -84,6 +91,27 @@ public class FiltersPanel extends JPanel {
 
     public static boolean[] getBoolValues() {
         return boxesSelected;
+    }
+
+    private LinkedHashMap<String, Map<String, Object>> setFilteredMap(Map<String, Map<String, Object>> updatedMap) {
+        LinkedHashMap<String, Map<String, Object>> sortedMap = updatedMap.entrySet().stream()
+                .sorted((inst1, inst2) -> {
+                    Double id1 = Double.parseDouble(inst1.getValue().get("HeartRate").toString());
+                    Double id2 = Double.parseDouble(inst2.getValue().get("HeartRate").toString());
+                    return id1.compareTo(id2);
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new));
+        return sortedMap;
+    }
+
+    private void genStatPane(boolean[] boxesSelected) {
+        if (boxesSelected[0] || boxesSelected[1] || boxesSelected[2] || boxesSelected[3]) {
+            StatsPanel.drawToStatTable(originMap, boxesSelected);
+        } else {
+            StatsPanel.clearTable();
+        }
     }
 
 }

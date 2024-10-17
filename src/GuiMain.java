@@ -31,7 +31,7 @@ public class GuiMain {
 
         frame.add(detailsPanel);
         frame.add(chartPanel);
-        StatsPanel statsPanel = new StatsPanel();
+        StatsPanel statsPanel = new StatsPanel(entryData);
         frame.add(statsPanel);
         frame.revalidate();
         frame.repaint();

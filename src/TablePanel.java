@@ -5,13 +5,9 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Filter;
 import java.util.stream.Collectors;
-import java.util.LinkedHashMap;
 
 public class TablePanel extends JPanel {
 
@@ -70,57 +66,120 @@ public class TablePanel extends JPanel {
                 }
             }
         });
-
+        boolean[] headerSelected = new boolean[4];
         JTableHeader header = table.getTableHeader();
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int col = table.columnAtPoint(e.getPoint());
-                if (col == 0) {
-                    LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
-                            .sorted((inst1, inst2) -> {
-                                String id1 = inst1.getValue().get("cageID").toString();
-                                String id2 = inst2.getValue().get("cageID").toString();
-                                return id1.compareTo(id2);
-                            })
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                    (oldValue, newValue) -> oldValue,
-                                    LinkedHashMap::new));
-                    regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                if (headerSelected[col] == false) {
+                    for (int i = 0; i < headerSelected.length; i++) {
+                        if (i == col) {
+                            headerSelected[i] = true;
+                        } else {
+                            headerSelected[i] = false;
+                        }
+                    }
+                } else {
+                    headerSelected[col] = false;
+                }
 
+                if (col == 0) {
+                    if (headerSelected[0]) {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    String id1 = inst1.getValue().get("cageID").toString();
+                                    String id2 = inst2.getValue().get("cageID").toString();
+                                    return id1.compareTo(id2);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    } else {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    String id1 = inst1.getValue().get("cageID").toString();
+                                    String id2 = inst2.getValue().get("cageID").toString();
+                                    return id2.compareTo(id1);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    }
                 } else if (col == 1) {
-                    LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
-                            .sorted((inst1, inst2) -> {
-                                Integer id1 = Integer.parseInt(inst1.getValue().get("age").toString());
-                                Integer id2 = Integer.parseInt(inst2.getValue().get("age").toString());
-                                return id1.compareTo(id2);
-                            })
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                    (oldValue, newValue) -> oldValue,
-                                    LinkedHashMap::new));
-                    regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    if (headerSelected[1]) {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    Integer id1 = Integer.parseInt(inst1.getValue().get("age").toString());
+                                    Integer id2 = Integer.parseInt(inst2.getValue().get("age").toString());
+                                    return id1.compareTo(id2);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    } else {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    Integer id1 = Integer.parseInt(inst1.getValue().get("age").toString());
+                                    Integer id2 = Integer.parseInt(inst2.getValue().get("age").toString());
+                                    return id2.compareTo(id1);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    }
                 } else if (col == 2) {
-                    LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
-                            .sorted((inst1, inst2) -> {
-                                String id1 = inst1.getValue().get("sex").toString();
-                                String id2 = inst2.getValue().get("sex").toString();
-                                return id1.compareTo(id2);
-                            })
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                    (oldValue, newValue) -> oldValue,
-                                    LinkedHashMap::new));
-                    regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    if (headerSelected[2]) {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    String id1 = inst1.getValue().get("sex").toString();
+                                    String id2 = inst2.getValue().get("sex").toString();
+                                    return id1.compareTo(id2);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    } else {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    String id1 = inst1.getValue().get("sex").toString();
+                                    String id2 = inst2.getValue().get("sex").toString();
+                                    return id2.compareTo(id1);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    }
                 } else if (col == 3) {
-                    LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
-                            .sorted((inst1, inst2) -> {
-                                Double id1 = Double.parseDouble(inst1.getValue().get("HeartRate").toString());
-                                Double id2 = Double.parseDouble(inst2.getValue().get("HeartRate").toString());
-                                return id1.compareTo(id2);
-                            })
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                    (oldValue, newValue) -> oldValue,
-                                    LinkedHashMap::new));
-                    regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    if (headerSelected[3]) {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    Double id1 = Double.parseDouble(inst1.getValue().get("HeartRate").toString());
+                                    Double id2 = Double.parseDouble(inst2.getValue().get("HeartRate").toString());
+                                    return id1.compareTo(id2);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    } else {
+                        LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
+                                .sorted((inst1, inst2) -> {
+                                    Double id1 = Double.parseDouble(inst1.getValue().get("HeartRate").toString());
+                                    Double id2 = Double.parseDouble(inst2.getValue().get("HeartRate").toString());
+                                    return id2.compareTo(id1);
+                                })
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue,
+                                        LinkedHashMap::new));
+                        regenTableFilter(sortedMap, Constants.filterString, FiltersPanel.getBoolValues());
+                    }
                 }
 
 
@@ -253,23 +312,21 @@ public class TablePanel extends JPanel {
             listOfVisibleEntries.putAll(filteredMap);
         }
 
+        LinkedHashMap<String, Map<String, Object>> placeholder = new LinkedHashMap<>();
+
+
         if (!(filterBoxVisible[0] || filterBoxVisible[1] || filterBoxVisible[2] || filterBoxVisible[3])) {
 
-        }
+            StatsPanel.clearTable();
 
-        LinkedHashMap<String, Map<String, Object>> placeholder = new LinkedHashMap<>();
-        placeholder.putAll(tableData);
-
-        for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
-            if (!listOfVisibleEntries.containsKey(entry.getKey())) {
-                placeholder.remove(entry.getKey());
+        } else {
+            placeholder.putAll(tableData);
+            for (Map.Entry<String, Map<String, Object>> entry : tableData.entrySet()) {
+                if (!listOfVisibleEntries.containsKey(entry.getKey())) {
+                    placeholder.remove(entry.getKey());
+                }
             }
-        }
-
-        addInstancesToTable(placeholder);
-
-        for (Map.Entry<String, Map<String, Object>> entry : placeholder.entrySet()) {
-            System.out.println(entry.getValue().get("cageID"));
+            addInstancesToTable(placeholder);
         }
 
 
