@@ -30,11 +30,17 @@ public class StatsPanel extends JPanel {
         setVisible(true);
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        boolean[] activatedBoxes = new boolean[4];
+        for (int i = 0; i < activatedBoxes.length; i++) {
+            activatedBoxes[i] = true;
+        }
+        LinkedHashMap<String, Map<String, Object>> sortMap = createSortedMap(activatedBoxes, instanceMap);
+        drawToStatTable(sortMap, activatedBoxes);
     }
 
     public static Object[] calculateStatistics(LinkedHashMap<String, Map<String, Object>> sortedMap) {
 
-        Object[] statistics = new Object[3];
+        Object[] statistics = new Object[5];
         double meanValue = 0.0;
         /*
         Calculate Mean
@@ -70,8 +76,11 @@ public class StatsPanel extends JPanel {
         /*
         Calculate Range
          */
+
         System.out.println( HeartRateValues.getLast() + ", " + HeartRateValues.getFirst());
-        statistics[2] = HeartRateValues.getLast() - HeartRateValues.getFirst();
+        statistics[2] = HeartRateValues.getFirst();
+        statistics[3] = HeartRateValues.getLast();
+        statistics[4] = HeartRateValues.getLast() - HeartRateValues.getFirst();
 
         return statistics;
     }
@@ -80,7 +89,7 @@ public class StatsPanel extends JPanel {
         LinkedHashMap<String, Map<String, Object>> filteredSortMap = createSortedMap(activatedBoxes, data);
         Object[] results = calculateStatistics(filteredSortMap);
         model.setRowCount(0);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             model.addRow(new Object[] {Constants.statisticName[i], results[i]});
         }
 

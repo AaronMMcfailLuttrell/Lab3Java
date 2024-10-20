@@ -185,6 +185,9 @@ public class TablePanel extends JPanel {
 
             }
         });
+
+        table.setRowSelectionInterval(0, 0);
+
     }
 
     public JTable getTable() {

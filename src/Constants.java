@@ -7,7 +7,7 @@ public class Constants {
     public static final int TABLE_BOUND_WIDTH = FRAME_WIDTH/2;
     public static final int TABLE_BOUND_HEIGHT = FRAME_HEIGHT/3 - 20;
     public static final String[] filterString = new String[] {"M", "F", "600", "600"};
-    public static final String[] statisticName = new String[] {"Mean", "Median", "Range"};
+    public static final String[] statisticName = new String[] {"Mean", "Median", "Lowest Heart Rate", "Highest Heart Rate" ,"Range"};
 
 
 
