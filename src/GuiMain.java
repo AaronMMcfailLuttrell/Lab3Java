@@ -13,7 +13,7 @@ public class GuiMain {
 
 
 
-        //Temp
+
         //chartPanel constructors always start with boxes activated
         boolean[] allActivated = new boolean[4];
         for (int g = 0; g < allActivated.length; g++) {
@@ -38,6 +38,10 @@ public class GuiMain {
 
     }
 
+
+    /*
+    Intermediate method called by the constructor to initialize the window.
+     */
     private static JFrame createMainFrame() {
         JFrame mainFrame = new JFrame("Main Frame");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

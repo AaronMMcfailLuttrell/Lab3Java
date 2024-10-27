@@ -13,7 +13,7 @@ public class TablePanel extends JPanel {
 
     JTable table;
     JScrollPane scrollPane;
-    DefaultTableModel model;
+    DefaultTableModel model; //Thing that actually stores the data for the table
     int[] values;
     public TablePanel(Map<String, Map<String, Object>> tableData, DetailsPanel detailsPanel) {
         setLayout(null);
@@ -48,7 +48,7 @@ public class TablePanel extends JPanel {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 
-        //This is for the details panel
+        //This is for the details panel, when clicking on an entry on the original table, show the extra information in the details table
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = table.getSelectedRow();
@@ -68,6 +68,7 @@ public class TablePanel extends JPanel {
         });
         boolean[] headerSelected = new boolean[4];
         JTableHeader header = table.getTableHeader();
+        //For sorting purposes on the original table
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -84,6 +85,8 @@ public class TablePanel extends JPanel {
                     headerSelected[col] = false;
                 }
 
+
+                //If statements for sorting, actually sorts the information and regenerates the table
                 if (col == 0) {
                     if (headerSelected[0]) {
                         LinkedHashMap<String, Map<String, Object>> sortedMap = tableData.entrySet().stream()
@@ -213,7 +216,9 @@ public class TablePanel extends JPanel {
 
     }
 
-
+    /*
+    Once the user selects filters, it will regenerate the map which then gets put into the model for the table
+     */
     public int[] regenTableFilter(Map<String, Map<String, Object>> tableData, String[] FilterString, boolean[] filterBoxVisible) {
 
         //Create a counter that will pass to the generation of the chart
@@ -222,6 +227,7 @@ public class TablePanel extends JPanel {
             values[i] = 0;
         }
         this.model.setRowCount(0);
+        //If statements for if a specific value is true, if so, place that entry in the map
         if (filterBoxVisible[0]) {
             Map<String, Map<String, Object>> filteredMap = tableData.entrySet().stream()
                     .filter(sex -> sex.getValue().get("sex").toString().equalsIgnoreCase("M"))
@@ -258,15 +264,6 @@ public class TablePanel extends JPanel {
             values[3] = filteredMap.size();
             addInstancesToTable(filteredMap);
         }
-
-        if (!(filterBoxVisible[0] || filterBoxVisible[1] || filterBoxVisible[2] || filterBoxVisible[3])) {
-
-        }
-
-
-
-
-
         return values;
     }
 

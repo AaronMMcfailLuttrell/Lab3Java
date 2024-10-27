@@ -24,10 +24,11 @@ public class ChartPane extends JPanel {
         dataset = new DefaultPieDataset();
         chartPanel = new ChartPanel(chart);
 
-        //Test
+        //Create a new map for temporary use, creates an initial display for all filters being selected
         Map<String, Map<String, Object>> testMap = FileHandler.readFile("src\\miceData.txt");
         String[] filterString = new String[] {"M", "F", "600", "600"};
         boolean[] allSelected = new boolean[4];
+        //allSelected by default will be true to pass into the function that generates the chart
         for (int i = 0; i < allSelected.length; i++) {
             allSelected[i] = true;
         }
@@ -37,12 +38,18 @@ public class ChartPane extends JPanel {
         buildPieChart(totals);
     }
 
+    /*
+    CollectTotals: Once the filtering has properly been done with the information, this calls as a sort of setter to build the chart.
+     */
     public void CollectTotals(int[] totals) {
         for (int i = 0; i < totals.length; i++) {
             this.totals[i] = totals[i];
         }
     }
 
+    /*
+    Name is sort of self explanitory, takes all information in about what is gathered and builds a chart based on it.
+     */
     public void buildPieChart(int[] pieData) {
 
         CollectTotals(pieData);

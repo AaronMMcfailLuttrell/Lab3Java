@@ -29,7 +29,10 @@ public class DetailsPanel extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
-
+    /*
+    setDetailInfo: Takes in the data based on the selected entry in the regular table, and displays every hidden aspect along with what
+    was displayed on the original table. An update is then made to the detail table.
+     */
     public void setDetailInfo(Map<String, Object> instanceTable) {
         model.setRowCount(0);
         for (Map.Entry<String, Object> entry : instanceTable.entrySet()) {

@@ -12,6 +12,7 @@ public class FiltersPanel extends JPanel {
     private static boolean[] boxesSelected;
     private Map<String, Map<String, Object>> originMap;
     private LinkedHashMap<String, Map<String, Object>> filterMap;
+
     public FiltersPanel(TablePanel tableRef, Map<String, Map<String, Object>> originMap, ChartPane pieSet) {
         this.originMap = originMap;
         this.tableRef = tableRef;
@@ -33,13 +34,14 @@ public class FiltersPanel extends JPanel {
 
         }
 
-
+        //Create the actual check boxes with their names
         JCheckBox[] filterBoxes = new JCheckBox[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             filterBoxes[i] = new JCheckBox(filterSort[i]);
             filterBoxes[i].setSelected(true);
         }
 
+        //boxesSelected is an array that will store the enabled status of checkboxes for later usage.
         boxesSelected = new boolean[filterSort.length];
         for (int i = 0; i < filterSort.length; i++) {
             boxesSelected[i] = true;
@@ -84,15 +86,23 @@ public class FiltersPanel extends JPanel {
 
     }
 
+    /*
+    tableFilter: Intermediate method that is called to filter out the table
+     */
     private int[] tableFilter(Map<String, Map<String, Object>> entryData, boolean[] filterBoxVisible, String[] FilterString) {
         int[] values = tableRef.regenTableFilter(entryData, FilterString, filterBoxVisible);
         return values;
     }
 
+
+    //Getter
     public static boolean[] getBoolValues() {
         return boxesSelected;
     }
 
+    /*
+    Converst a hash map into a stream and then into a LinkedHashMap. LinkedHashMap stores order, regular Maps dont.
+     */
     private LinkedHashMap<String, Map<String, Object>> setFilteredMap(Map<String, Map<String, Object>> updatedMap) {
         LinkedHashMap<String, Map<String, Object>> sortedMap = updatedMap.entrySet().stream()
                 .sorted((inst1, inst2) -> {
@@ -105,6 +115,7 @@ public class FiltersPanel extends JPanel {
                         LinkedHashMap::new));
         return sortedMap;
     }
+
 
     private void genStatPane(boolean[] boxesSelected) {
         if (boxesSelected[0] || boxesSelected[1] || boxesSelected[2] || boxesSelected[3]) {

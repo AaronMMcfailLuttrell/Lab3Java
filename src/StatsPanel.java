@@ -10,6 +10,7 @@ public class StatsPanel extends JPanel {
     static JTable statTable;
     JScrollPane scrollStat;
     Map<String, Map<String, Object>> dataRef;
+
     public StatsPanel(Map<String, Map<String, Object>> instanceMap) {
         setLayout(null);
         dataRef = instanceMap;
@@ -30,14 +31,20 @@ public class StatsPanel extends JPanel {
         setVisible(true);
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //Sets all default activated boxes to true
         boolean[] activatedBoxes = new boolean[4];
         for (int i = 0; i < activatedBoxes.length; i++) {
             activatedBoxes[i] = true;
         }
+        //Get the initial sorted data based on all information being visible
         LinkedHashMap<String, Map<String, Object>> sortMap = createSortedMap(activatedBoxes, instanceMap);
         drawToStatTable(sortMap, activatedBoxes);
     }
 
+
+    /*
+    Calculates the information that will be displayed on the stats panel based on the information provided, such as the filtered map
+     */
     public static Object[] calculateStatistics(LinkedHashMap<String, Map<String, Object>> sortedMap) {
 
         Object[] statistics = new Object[5];
@@ -85,6 +92,9 @@ public class StatsPanel extends JPanel {
         return statistics;
     }
 
+    /*
+    Method that will actually display the information to the stats panel
+     */
     public static void drawToStatTable(Map<String, Map<String, Object>> data, boolean[] activatedBoxes) {
         LinkedHashMap<String, Map<String, Object>> filteredSortMap = createSortedMap(activatedBoxes, data);
         Object[] results = calculateStatistics(filteredSortMap);
@@ -97,6 +107,10 @@ public class StatsPanel extends JPanel {
 
     }
 
+
+    /*
+    Creates the sorted map based on what header the user selects.
+     */
     private static LinkedHashMap<String, Map<String, Object>> createSortedMap(boolean[] activatedBoxes, Map<String, Map<String, Object>> data) {
         LinkedHashMap<String, Map<String, Object>> sortedMap = new LinkedHashMap<>();
         if (activatedBoxes[0]) {
